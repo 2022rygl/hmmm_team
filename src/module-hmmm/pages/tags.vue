@@ -7,15 +7,15 @@
           <div class="searchfrom">
             <el-form
               :inline="true"
-              :model="pages"
+              :model="search"
               class="demo-form-inline"
               size="small"
             >
               <el-form-item label="标签名称" style="margin-left: 12px">
-                <el-input v-model="pages.tagName"></el-input>
+                <el-input v-model="search.tagName"></el-input>
               </el-form-item>
               <el-form-item label="状态" style="margin-left: 40px">
-                <el-select v-model="pages.state" placeholder="请选择">
+                <el-select v-model="search.state" placeholder="请选择">
                   <el-option label="已启用" value="1"></el-option>
                   <el-option label="已禁用" value="0"></el-option>
                 </el-select>
@@ -119,11 +119,11 @@
       <span>
         <el-form
           :model="addlabels"
-          :rules="rules"
           ref="ruleForm"
           label-width="100px"
           class="demo-ruleForm"
         >
+          <!-- :rules="rules" -->
           <el-form-item label="活动区域" prop="region">
             <el-select
               v-model="addlabels.subjectID"
@@ -160,7 +160,9 @@ export default {
       // 页数
       pages: {
         page: 1,
-        pagesize: '10',
+        pagesize: '10'
+      },
+      search: {
         tagName: '',
         state: ''
       },
@@ -176,18 +178,11 @@ export default {
       addlabels: {
         id: '',
         subjectID: '',
-        tagName: '',
-        state: ''
+        tagName: ''
       },
       ruleForm: {
         name: '',
         region: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ]
       }
     }
   },
@@ -199,6 +194,12 @@ export default {
     // 列表
     async labellistapi () {
       const data = await GETlabellist(this.pages)
+      this.labellist = data.data.items
+      this.purgx()
+      // console.log(this.labellist)
+    },
+    async searchapi () {
+      const data = await GETlabellist(this.search)
       this.labellist = data.data.items
       this.purgx()
       // console.log(this.labellist)
@@ -265,11 +266,11 @@ export default {
     },
     onSubmit () {
       // console.log(this.pages)
-      this.labellistapi()
+      this.searchapi()
     },
     purgx () { // 清除搜索框内容
-      this.pages.tagName = ''
-      this.pages.state = ''
+      this.search.tagName = ''
+      this.search.state = ''
     },
     // 新增标签
     addlabel () {
