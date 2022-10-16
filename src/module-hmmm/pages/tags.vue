@@ -178,7 +178,8 @@ export default {
       addlabels: {
         id: '',
         subjectID: '',
-        tagName: ''
+        tagName: '',
+        state: ''
       },
       ruleForm: {
         name: '',
@@ -196,7 +197,7 @@ export default {
       const data = await GETlabellist(this.pages)
       this.labellist = data.data.items
       this.purgx()
-      // console.log(this.labellist)
+      console.log(this.labellist)
     },
     async searchapi () {
       const data = await GETlabellist(this.search)
@@ -301,13 +302,14 @@ export default {
       this.currentRow = val
     },
     deleteRow (row) {
+      console.log(row)
       this.addlabels.id = row.id
       if (row.state === 1) {
         row.state = 0
         this.addlabels.state = 0
       } else {
         row.state = 1
-        this.addlabels.state = 0
+        this.addlabels.state = 1
       }
       console.log()
       this.changeStateapi()
