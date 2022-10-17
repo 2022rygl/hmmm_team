@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     btnCancel () {
-      console.log(1)
+      // console.log(1)
       this.$emit('update:articlesShow', false)
     }
   }

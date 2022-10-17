@@ -161,17 +161,19 @@ export default {
       }
     },
     async del (row) {
+      console.log(row)
       try {
         await this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'
         })
-        console.log(row)
         const res = await remove(row)
         console.log(res)
+        this.$message.success('删除成功')
         this.getlist()
       } catch (error) {
+        this.$message.success('删除失败')
         console.log(error)
       }
     },
