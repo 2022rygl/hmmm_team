@@ -153,6 +153,7 @@
 <script>
 import { GETlabellist, simple, remove, add, updatelabel, changeState } from '@/api/hmmm/tags.js'
 export default {
+  name: 'Tags',
   data () {
     return {
       // 新增标签弹框
@@ -163,6 +164,8 @@ export default {
         pagesize: '10'
       },
       search: {
+        page: 1,
+        pagesize: '10',
         tagName: '',
         state: ''
       },
@@ -267,7 +270,11 @@ export default {
     },
     onSubmit () {
       // console.log(this.pages)
-      this.searchapi()
+      if (this.search.tagName === '' && this.search.state === '') {
+        this.labellistapi() // 列表
+      } else {
+        this.searchapi()
+      }
     },
     purgx () { // 清除搜索框内容
       this.search.tagName = ''
