@@ -1,13 +1,13 @@
 <template>
   <div class="add-form">
-    <el-dialog :title="text+pageTitle" :visible.sync="dialogFormVisible">
+    <el-dialog :title="text + pageTitle" :visible.sync="dialogFormVisible">
       <el-form
         :rules="ruleInline"
         ref="dataForm"
         :model="formBase"
         label-position="left"
         label-width="120px"
-        style="width: 400px; margin-left:120px;"
+        style="width: 400px; margin-left: 120px"
       >
         <el-form-item :label="$t('table.username')" prop="title">
           <el-input v-model="formBase.title"></el-input>
@@ -26,8 +26,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">{{$t('table.cancel')}}</el-button>
-        <el-button type="primary" @click="handleAdd('formBase')">{{$t('table.confirm')}}</el-button>
+        <el-button @click="handleClose">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="handleAdd('formBase')">{{
+          $t('table.confirm')
+        }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -243,14 +245,14 @@ export default {
   },
   // 挂载结束
 
-  mounted: function () {},
+  mounted: function () { },
   // 创建完毕状态
   created () {
     _this = this
     this.setupData()
   },
   // 组件更新
-  updated: function () {}
+  updated: function () { }
 }
 </script>
 <style>
