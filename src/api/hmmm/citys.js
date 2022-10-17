@@ -3912,7 +3912,6 @@ export const provinces = () => {
     return item.city
   })
 }
-
 // 城市下地区
 export const citys = pname => {
   for (const item of datas) {
