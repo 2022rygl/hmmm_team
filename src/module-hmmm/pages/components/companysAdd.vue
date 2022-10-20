@@ -120,6 +120,20 @@ export default {
   },
   methods: {
     btnCancel () {
+      this.addform = {
+        shortName: '',
+        company: '',
+        province: '',
+        city: '',
+        tags: '',
+        remarks: '',
+        isFamous: true,
+        id: '',
+        number: '',
+        addDate: '',
+        creatorID: '',
+        state: ''
+      }
       this.$emit('update:companysAdd', false)
     },
     async btnOk () {
@@ -132,6 +146,7 @@ export default {
         } else {
           const res = await add(this.addform)
           this.$message.success('新增成功')
+          this.$refs.addform.resetFields()
           this.$emit('getlist')
           console.log(res)
         }

@@ -53,9 +53,17 @@
         >
         </el-alert>
         <!-- 表单 -->
-        <el-table :data="itemsArr" style="width: 100%">
+        <el-table :data="itemsArr" style="width: 100%" v-loading="loading">
           <el-table-column type="index" label="序号" width="100" />
-          <el-table-column prop="title" label="文章标题" width="390" />
+          <el-table-column prop="title" label="文章标题" width="390">
+            <template slot-scope="{ row }">
+              <span>{{ row.title }}</span>
+              <i
+                :class="row.videoURL ? 'el-icon-video-camera-solid' : ''"
+                @click="video(row)"
+              ></i>
+            </template>
+          </el-table-column>
           <el-table-column prop="visits" label="阅读数" width="140" />
           <el-table-column prop="username" label="录入人" width="160" />
           <el-table-column prop="createTime" label="录入时间" width="200" />
@@ -90,6 +98,20 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页组件 -->
+        <el-row type="flex" justify="end" align="middle" style="height: 60px">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="page.page"
+            layout="sizes, prev, pager, next, jumper"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="page.pagesize"
+            :total="itemAllarr"
+          >
+          </el-pagination>
+        </el-row>
       </el-card>
     </div>
     <!-- 预览 -->
@@ -100,6 +122,15 @@
       :articlesAdd.sync="articlesAdd"
       @getlist="getlist"
     ></articles-add>
+    <video
+      v-if="showVideo"
+      :src="videoURL"
+      autoplay
+      controls
+      loop
+      class="video"
+    ></video>
+    <i v-if="showVideo" class="el-icon-circle-close" @click="btndel"></i>
   </div>
 </template>
 
@@ -108,23 +139,34 @@ import { list, remove, changeState } from '@/api/hmmm/articles.js'
 import EnumHireType from '@/api/base/baseApi'
 import articlesShow from './components/articlesShow.vue'
 import ArticlesAdd from './components/articlesAdd.vue'
+import dayjs from 'dayjs'
+// dayjs('2019-01-25').format('DD/MM/YYYY')
+console.log(dayjs('2019-01-25').format('YYYY-MM-DD HH:mm:ss'))
 export default {
+  name: 'article',
   components: { articlesShow, ArticlesAdd },
   data () {
     return {
+      page: {
+        page: 1,
+        pagesize: 10
+      },
       itemsArr: [],
+      loading: false,
       itemAllarr: 0,
       status: EnumHireType.status,
       articlesShow: false,
       articlesAdd: false,
       quyu: '',
       state: EnumHireType.status,
+      videoURL: '',
       form: {
         keyword: '',
         state: '',
         page: 1,
         pagesize: 10
-      }
+      },
+      showVideo: false
     }
   },
   created (row) {
@@ -138,8 +180,11 @@ export default {
     },
     // 页面数据
     async getlist () {
-      const { data } = await list()
+      const { data } = await list(this.page)
       this.itemAllarr = data.counts
+      data.items.forEach(item => {
+        item.createTime = dayjs(item.createTime).format('YYYY-MM-DD HH:mm:ss')
+      })
       this.itemsArr = data.items
     },
     async show (row) {
@@ -190,7 +235,25 @@ export default {
     async search () {
       const { data } = await list(this.form)
       this.itemsArr = data.items
+    },
+    video (row) {
+      this.videoURL = row.videoURL
+      this.showVideo = true
+      console.log(row)
+    },
+    btndel () {
+      this.showVideo = false
+    },
+    handleSizeChange (val) {
+      console.log(val)
+      this.page.pagesize = val
+      this.getlist(this.page)
+    },
+    handleCurrentChange (val) {
+      this.page.page = val
+      this.getlist(this.page)
     }
+
   }
 }
 </script>
@@ -205,5 +268,18 @@ export default {
 }
 .searchfrom {
   display: flex;
+}
+.video {
+  position: absolute;
+  bottom: 100px;
+  left: 400px;
+  width: 900px;
+  height: 600px;
+}
+.el-icon-circle-close {
+  position: absolute;
+  bottom: 700px;
+  left: 800px;
+  font-size: 40px;
 }
 </style>

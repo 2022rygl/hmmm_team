@@ -131,6 +131,21 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- 分页组件 -->
+        <el-row type="flex" justify="end" align="middle" style="height: 60px">
+          <el-pagination
+            v-if="itemsAll >= 10"
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="page.page"
+            layout="sizes, prev, pager, next, jumper"
+            :page-sizes="[5, 10, 15, 20]"
+            :page-size="page.pagesize"
+            :total="itemsAll"
+          >
+          </el-pagination>
+        </el-row>
       </el-card>
     </div>
     <!-- 新增修改弹框 -->
@@ -167,6 +182,10 @@ export default {
         city: '',
         shortName: '',
         state: ''
+      },
+      page: {
+        page: 1,
+        pagesize: 10
       }
     }
   },
@@ -180,7 +199,7 @@ export default {
       return (res && res.label) || '非正式'
     },
     async getlist () {
-      const { data } = await list()
+      const { data } = await list(this.page)
       this.itemsAll = data.counts
       this.items = data.items
       console.log(this.items)
@@ -240,6 +259,14 @@ export default {
       console.log(row)
       row.state = +!row.state
       await disabled(row)
+    },
+    handleSizeChange (val) {
+      this.page.pagesize = val
+      this.getlist(this.page)
+    },
+    handleCurrentChange (val) {
+      this.page.page = val
+      this.getlist(this.page)
     }
   }
 }
