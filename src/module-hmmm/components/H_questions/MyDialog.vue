@@ -20,7 +20,10 @@
 <div v-if="data.questionType  !== '3'">
     <div>{{data.questionType | questionType}} 选项：（以下选中的选项为正确答案）</div>
     <div style="padding: 8px 0px;" v-for="item in data.options" :key="item.id">
-        <el-checkbox :checked="!!item.isRight">{{item.title}}</el-checkbox>
+        <el-checkbox v-if="data.questionType==='2'" :value="!!item.isRight">{{item.title}}</el-checkbox>
+          <el-radio-group v-else :value="1">
+              <el-radio :label="item.isRight">{{item.title}}</el-radio>
+          </el-radio-group>
     </div>
 </div>
 <hr>
@@ -56,7 +59,8 @@ export default {
   },
   data () {
     return {
-      isShow: false
+      isShow: false,
+      radio: 1
     }
   },
   methods: {

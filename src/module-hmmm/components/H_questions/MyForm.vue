@@ -113,7 +113,6 @@ export default {
     async subject () {
       const { data } = await subjectssimple()
       this.formlist[0].children = data
-      this.$emit('subject', data)
     },
     async users () {
       const { data } = await userssimple()
