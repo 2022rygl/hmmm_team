@@ -59,3 +59,15 @@ new Vue({
   i18n,
   render: h => h(App)
 })
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor, {
+  placeholder: '请输入内容',
+});
+
+ 

@@ -8,7 +8,6 @@
  */
 
 import { createAPI } from '@/utils/request'
-
 // 文章列表
 export const list = data => createAPI('/articles', 'get', data)
 
