@@ -1,44 +1,68 @@
 <template>
   <div class="add-form">
-    <el-dialog :title="text+pageTitle" :visible.sync="dialogFormVisible">
-    <el-form :rules="ruleInline" ref="formMenu" :model="formMenu" label-position="left" label-width="120px" style='width: 400px; margin-left:120px;'>
-          <el-form-item :label="$t('table.permissionUser')">
-              <el-radio-group v-model="type" class="choose-type" @change="handleChooseType">
-                <el-radio label="menu" class="choose-item" :disabled="typeStatus">菜单</el-radio>
-                <el-radio label="points" class="choose-item" :disabled="typeStatus">权限点</el-radio>
-              </el-radio-group>
+    <el-dialog :title="text + pageTitle" :visible.sync="dialogFormVisible">
+      <el-form
+        :rules="ruleInline"
+        ref="formMenu"
+        :model="formMenu"
+        label-position="left"
+        label-width="120px"
+        style="width: 400px; margin-left: 120px"
+      >
+        <el-form-item :label="$t('table.permissionUser')">
+          <el-radio-group
+            v-model="type"
+            class="choose-type"
+            @change="handleChooseType"
+          >
+            <el-radio label="menu" class="choose-item" :disabled="typeStatus"
+              >菜单</el-radio
+            >
+            <el-radio label="points" class="choose-item" :disabled="typeStatus"
+              >权限点</el-radio
+            >
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label="$t('table.permissionUser')">
+          <el-select v-model="formMenu.pid">
+            <el-option :value="0" :label="$t('table.powerNav')"
+              >主导航</el-option
+            >
+            <el-option
+              v-for="items in notPointDataList"
+              :value="items.id"
+              :key="items.id"
+              :label="items.title"
+              :disabled="type === 'points' && !!items.childs"
+              :class="'moveIn' + items.layer"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <div v-if="showMenuBlock">
+          <el-form-item :label="$t('table.powerCode')" prop="code">
+            <el-input v-model="formMenu.code"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('table.permissionUser')">
-              <el-select v-model="formMenu.pid">
-                <el-option :value="0" :label="$t('table.powerNav')">主导航</el-option>
-                <el-option v-for="(items) in notPointDataList" :value="items.id" :key="items.id" :label="items.title" :disabled="(type === 'points') && !!(items.childs)" :class="'moveIn'+items.layer">
-                </el-option>
-              </el-select>
-
-            </el-form-item>
-          <div v-if="showMenuBlock">
-            <el-form-item :label="$t('table.powerCode')" prop="code">
-              <el-input v-model="formMenu.code"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('table.powerTitle')" prop="title">
-              <el-input v-model="formMenu.title"></el-input>
-            </el-form-item>
-          </div>
-          <div v-if="showPointBlock" :model="formPoints">
-            <el-form-item :label="$t('table.powerCode')" prop="code">
-              <el-input v-model="formPoints.code"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('table.powerTitle')" prop="title">
-              <el-input v-model="formPoints.title"></el-input>
-            </el-form-item>
-          </div>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="handleClose">{{$t('table.cancel')}}</el-button>
-          <el-button type="primary" @click="handleSubmit('formMenu')">{{$t('table.confirm')}}</el-button>
+          <el-form-item :label="$t('table.powerTitle')" prop="title">
+            <el-input v-model="formMenu.title"></el-input>
+          </el-form-item>
         </div>
-  </el-dialog>
-
+        <div v-if="showPointBlock" :model="formPoints">
+          <el-form-item :label="$t('table.powerCode')" prop="code">
+            <el-input v-model="formPoints.code"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('table.powerTitle')" prop="title">
+            <el-input v-model="formPoints.title"></el-input>
+          </el-form-item>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="handleSubmit('formMenu')">{{
+          $t('table.confirm')
+        }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -301,13 +325,13 @@ export default {
     }
   },
   // 挂载结束
-  mounted: function () {},
+  mounted: function () { },
   // 创建完毕状态
   created () {
     _this = this
   },
   // 组件更新
-  updated: function () {}
+  updated: function () { }
 }
 </script>
 <style>

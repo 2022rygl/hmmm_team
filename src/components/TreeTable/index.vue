@@ -1,8 +1,20 @@
 <template>
-    <el-table :data="formatData"  :row-class-name="rowClassStatus" v-loading="listLoading"  element-loading-text="给我一点时间" fit highlight-current-row
-      style="width: 100%">
-    <el-table-column v-for="(column, index) in columns" :key="column.prop" :width="column.width" :prop="column.prop"
-      :label="column.text">
+  <el-table
+    :data="formatData"
+    :row-class-name="rowClassStatus"
+    v-loading="listLoading"
+    element-loading-text="给我一点时间"
+    fit
+    highlight-current-row
+    style="width: 100%"
+  >
+    <el-table-column
+      v-for="(column, index) in columns"
+      :key="column.prop"
+      :width="column.width"
+      :prop="column.prop"
+      :label="column.text"
+    >
       <template slot-scope="scope">
         <expand
           v-if="column.render"
@@ -13,23 +25,49 @@
         >
         </expand>
         <span v-else>
-          {{scope.row[column.value]}}
+          <template v-if="column.value == 'title'">
+            <i
+              class="el-icon-folder-opened"
+              style="margin-left: 20px"
+              v-if="scope.row._level === 0"
+            />
+            <i
+              class="el-icon-document-remove"
+              style="margin-left: 40px"
+              v-if="
+                (scope.row._level === 1 || scope.row._level === 2) &&
+                !scope.row.is_point
+              "
+            />
+            <i
+              class="el-icon-view"
+              style="margin-left: 60px"
+              v-if="scope.row.is_point"
+            />
+            {{ scope.row[column.value] }}
+          </template>
+          <template v-if="column.value == 'code'">
+            {{ scope.row[column.value] }}
+          </template>
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="260" align="center">
-      <template  slot-scope="scope">
+
+    <el-table-column label="操作" width="110" align="center">
+      <template slot-scope="scope">
         <el-button
-          size="mini"
+          @click="handleUpdate(scope.row)"
           type="primary"
-          @click="handleUpdate(scope.row)">
-          修改
+          icon="el-icon-edit"
+          circle
+        >
         </el-button>
         <el-button
-          size="mini"
           type="danger"
-          @click="handleDelete(scope.row.id)">
-          删除
+          @click="handleDelete(scope.row.id)"
+          icon="el-icon-delete"
+          circle
+        >
         </el-button>
       </template>
     </el-table-column>
@@ -41,6 +79,10 @@ import Utils from './utils/dataTranslate.js'
 import expand from './utils/expand'
 export default {
   name: 'treeTable',
+  defaultprops: {
+    children: 'childs',
+    label: 'title'
+  },
   components: { expand },
   props: {
     // 该属性是确认父组件传过来的数据是否已经是树形结构了，如果是，则不需要进行树形格式化
@@ -94,7 +136,7 @@ export default {
       this.$emit('handleUpdate', row)
     },
     handleDelete (user) {
-      this.$emit('removeUser', user)
+      this.$emit('handleDelete', user)
     }
   }
 }
